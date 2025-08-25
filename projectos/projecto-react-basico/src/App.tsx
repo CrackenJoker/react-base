@@ -1,35 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
+interface CardProps{
+  titulo?:string;
+  children?:React.ReactNode;
+  rodape?:string;
+}
+function Card(props:CardProps){
+  return(
+    <div style={{border:'1px solid black', margin:'10px', padding:'10px', width:'80%',display:'flex',flexDirection:'column',alignItems:'center',borderRadius:'10px'}}>
+      <h1>Titulo:{props.titulo}</h1>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <p style={{display:'flex',flexWrap:'wrap'}}>{props.children}</p>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div>
+        <p>rodape:{props.rodape}</p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
-export default App
+export function App() {
+  const [item, setItem] = React.useState([
+    {id:1, nome:'Orar a Deus'},
+    {id:2, nome:'Exercitar o corpo'},
+    {id:3, nome:'Higiene pessoal'},
+    {id:4, nome:'Tomar um banho'},
+    {id:5, nome:'Tomar o pequeno almoco'},
+  ])
+
+  return (
+    <>         
+          <div>
+            <h1>Lista de tarefas</h1>
+            <input type="text" name='itemNovo' placeholder='Insira um novo item para a lista'/>
+            <button onClick={()=>setItem}>Adicionar</button>
+            <ol>
+              {item.map((item)=><li key={item.id}>{item.nome}</li>)}
+            </ol>
+          </div>  
+    </>
+    
+
+  )
+}
+
+
