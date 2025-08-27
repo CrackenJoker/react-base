@@ -1,4 +1,6 @@
 import React from 'react';
+import { InputAdd } from './components/inputAdd';
+import { ItemList } from './components/itemAdd';
 
 /*interface CardProps{
   titulo?:string;
@@ -21,8 +23,7 @@ import React from 'react';
 }*/
 
 export function App() {
-  
-  const [valor, setValor] = React.useState('')
+
   const [item, setItem] = React.useState([
     {id:1, nome:'Orar a Deus',estado:false},
     {id:2, nome:'Exercitar o corpo',estado:false},
@@ -31,36 +32,36 @@ export function App() {
     {id:5, nome:'Tomar o pequeno almoco',estado:false}
   ])
   
-  function removerItem(id:number){
-    setItem(item.filter((item)=>item.id !==id))
+  const handleRemover = (id:number)=>{
+        setItem(item.filter((item)=>item.id !==id))
+    }
+
+  const handleConcluir = (id:number)=>{
+        setItem(item.map((item)=>{
+        if(item.id===id){
+            return{...item,estado:true}
+        }
+        return item
+        }))
+    }
+
+  const handleAdd = (valor:string)=>{
+    setItem([...item,{id:item.length+1,nome:valor,estado:false}])
   }
 
-  function concluirItem(id:number){
-    setItem(item.map((item)=>{
-      if(item.id===id){
-        return{...item,estado:true}
-      }
-      return item
-    }))
-  }
   return (
     <>         
           <div>
             <h1>Lista de tarefas</h1>
-            <input type="text"  value={valor} 
-            onChange={(e)=>setValor(e.target.value)}
-            placeholder='Insira um novo item para a lista'/>
-            <button onClick={()=>{setItem([...item,{id:item.length+1,nome:valor,estado:false}]);
-            setValor('')}}>Adicionar</button>
-            <ol>
-              {item.map((item)=>
-                <li key={item.id}>
-                  {item.nome}
-                  {item.estado ? ' - Concluido' : ' - Pendente'}
-                  <button onClick={()=>concluirItem(item.id)}>Concluir</button>
-                  <button onClick={()=>removerItem(item.id)}>Remover</button>
-                </li>)}
-            </ol>
+            <InputAdd onAdd={(value)=>{handleAdd(value)}}/>
+           <ol>
+            {item.map((item)=>{
+              return <ItemList 
+                key={item.id} id={item.id} nome={item.nome} 
+                estado={item.estado} onConcluir={(id:number)=>{handleConcluir(id)}}
+                onRemover={(id:number)=>{handleRemover(id)}}/>
+            })}
+           </ol>
           </div>  
     </>
   )
